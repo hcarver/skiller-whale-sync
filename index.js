@@ -42,6 +42,4 @@ function swsync (other_cmd) {
   })
 }
 
-module.exports = {
-  swsync: swsync
-}
+module.exports = swsync
