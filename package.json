@@ -1,0 +1,23 @@
+{
+  "name": "skiller-whale-sync",
+  "version": "1.0.0",
+  "description": "A small module to sync file changes with the Skiller Whale backend",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hcarver/skiller-whale-sync.git"
+  },
+  "bin": {
+    "content-sync": "./content-watcher.js"
+  },
+  "bugs": {
+    "url": "https://github.com/hcarver/skiller-whale-sync/issues"
+  },
+  "homepage": "https://github.com/hcarver/skiller-whale-sync",
+  "author": "Skiller Whale Limited",
+  "license": "MIT",
+  "dependencies": {
+    "concurrently": "^4.1.0",
+    "cross-spawn": "^6.0.5"
+  }
+}
