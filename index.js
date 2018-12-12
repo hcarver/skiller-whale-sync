@@ -6,7 +6,7 @@ const rl = readline.createInterface({
   output: process.stdout
 })
 
-module.exports = function swsync (other_cmd) {
+function swsync (other_cmd) {
   cl = console.log
   cl("  _____ _    _ _ _            __          ___           _      ")
   cl(" / ____| |  (_) | |           \\ \\        / / |         | |     ")
@@ -40,4 +40,8 @@ module.exports = function swsync (other_cmd) {
       process.stderr.write(data)
     })
   })
+}
+
+module.exports = {
+  swsync: swsync
 }
