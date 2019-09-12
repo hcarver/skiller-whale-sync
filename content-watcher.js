@@ -3,7 +3,7 @@
 const path = require("path")
 const fs = require("fs")
 const crypto = require("crypto")
-const http = require("http")
+const https = require("https")
 const process = require("process")
 
 let fileHashes = new Map()
@@ -18,7 +18,8 @@ function putUpdate(path) {
 
   const options = {
     hostname: process.env.SERVER_URL || "train.skillerwhale.com",
-    port: process.env.SERVER_PORT || "80",
+    port: process.env.SERVER_PORT || "443",
+    protocol: "https:",
     path: `/attendances/${process.env.ATTENDANCE_ID}/file_snapshots`,
     method: "POST",
     headers: {
@@ -27,7 +28,7 @@ function putUpdate(path) {
     }
   }
 
-  const req = http.request(options, res => {
+  const req = https.request(options, res => {
     console.log(`status: ${res.statusCode}`)
 
     res.on("data", d => {
