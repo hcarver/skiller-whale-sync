@@ -8,7 +8,7 @@ const process = require("process")
 
 let fileHashes = new Map()
 const IGNORE_DIRS = ["node_modules", ".git"]
-const WATCHED_EXTS = [".jsx", ".js"]
+const WATCHED_EXTS = [".jsx", ".js", ".html"]
 
 function putUpdate(path) {
   const data = JSON.stringify({
