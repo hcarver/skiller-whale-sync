@@ -9,6 +9,7 @@ const process = require("process")
 let fileHashes = new Map()
 const IGNORE_DIRS = ["node_modules", ".git"]
 const WATCHED_EXTS = [".jsx", ".js", ".html"]
+var firstPass = true
 
 function putUpdate(path) {
   const data = JSON.stringify({
@@ -60,7 +61,7 @@ const pollDirectoryForChanges = dirPath => {
     } else {
       if (WATCHED_EXTS.includes(path.extname(newPath))) {
         const currentHash = hashFile(newPath)
-        if (fileHashes.has(newPath)) {
+        if (!firstPass) {
           const oldHash = fileHashes.get(newPath)
           if (oldHash !== currentHash) {
             console.log(`file changed ${newPath}`)
@@ -75,6 +76,7 @@ const pollDirectoryForChanges = dirPath => {
 
 const pollerFunction = () => {
   pollDirectoryForChanges(".")
+  firstPass = false
   setTimeout(pollerFunction, 1000)
 }
 
