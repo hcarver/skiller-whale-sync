@@ -13,22 +13,30 @@ var firstPass = true
 
 const hostName = process.env.SERVER_URL || "train.skillerwhale.com"
 
+function postRequestOptions(path, headers) {
+  return {
+    hostname: hostName,
+    port: process.env.SERVER_PORT || "443",
+    protocol: "https:",
+    path: path,
+    method: "POST",
+    headers: headers,
+  }
+}
+
+
 function putUpdate(path) {
   const data = JSON.stringify({
     relative_path: path,
     contents: fs.readFileSync(path).toString()
   })
-  const options = {
-    hostname: hostName,
-    port: process.env.SERVER_PORT || "443",
-    protocol: "https:",
-    path: `/attendances/${process.env.ATTENDANCE_ID}/file_snapshots`,
-    method: "POST",
-    headers: {
+  const options = postRequestOptions(
+    `/attendances/${process.env.ATTENDANCE_ID}/file_snapshots`,
+    {
       "Content-Type": "application/json",
       "Content-Length": data.length
     }
-  }
+  )
 
   const req = https.request(options, res => {
     console.log(`status: ${res.statusCode}`)
