@@ -12,11 +12,12 @@ const WATCHED_EXTS = [".jsx", ".js", ".html"]
 var firstPass = true
 
 const hostName = process.env.SERVER_URL || "train.skillerwhale.com"
+const serverPort = process.env.SERVER_PORT || "443"
 
 function postRequestOptions(path, headers) {
   return {
     hostname: hostName,
-    port: process.env.SERVER_PORT || "443",
+    port: serverPort,
     protocol: "https:",
     path: path,
     method: "POST",
