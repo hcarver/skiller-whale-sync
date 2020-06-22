@@ -25,7 +25,6 @@ function postRequestOptions(path, headers) {
   }
 }
 
-
 const pingOptions = postRequestOptions(
   `/attendances/${process.env.ATTENDANCE_ID}/pings`, {})
 
@@ -33,7 +32,6 @@ function sendPing() {
   const req = https.request(pingOptions)
   req.end()
 }
-
 
 function putUpdate(path) {
   const data = JSON.stringify({
