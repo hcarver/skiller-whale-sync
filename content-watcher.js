@@ -11,23 +11,40 @@ const IGNORE_DIRS = ["node_modules", ".git"]
 const WATCHED_EXTS = [".jsx", ".js", ".html"]
 var firstPass = true
 
+const hostName = process.env.SERVER_URL || "train.skillerwhale.com"
+const serverPort = process.env.SERVER_PORT || "443"
+
+function postRequestOptions(path, headers) {
+  return {
+    hostname: hostName,
+    port: serverPort,
+    protocol: "https:",
+    path: path,
+    method: "POST",
+    headers: headers,
+  }
+}
+
+const pingOptions = postRequestOptions(
+  `/attendances/${process.env.ATTENDANCE_ID}/pings`, {})
+
+function sendPing() {
+  const req = https.request(pingOptions)
+  req.end()
+}
+
 function putUpdate(path) {
   const data = JSON.stringify({
     relative_path: path,
     contents: fs.readFileSync(path).toString()
   })
-
-  const options = {
-    hostname: process.env.SERVER_URL || "train.skillerwhale.com",
-    port: process.env.SERVER_PORT || "443",
-    protocol: "https:",
-    path: `/attendances/${process.env.ATTENDANCE_ID}/file_snapshots`,
-    method: "POST",
-    headers: {
+  const options = postRequestOptions(
+    `/attendances/${process.env.ATTENDANCE_ID}/file_snapshots`,
+    {
       "Content-Type": "application/json",
       "Content-Length": data.length
     }
-  }
+  )
 
   const req = https.request(options, res => {
     console.log(`status: ${res.statusCode}`)
@@ -74,7 +91,9 @@ const pollDirectoryForChanges = dirPath => {
   })
 }
 
+
 const pollerFunction = () => {
+  sendPing()
   pollDirectoryForChanges(".")
   firstPass = false
   setTimeout(pollerFunction, 1000)
