@@ -25,6 +25,15 @@ function postRequestOptions(path, headers) {
 }
 
 
+const pingOptions = postRequestOptions(
+  `/attendances/${process.env.ATTENDANCE_ID}/pings`, {})
+
+function sendPing() {
+  const req = https.request(pingOptions)
+  req.end()
+}
+
+
 function putUpdate(path) {
   const data = JSON.stringify({
     relative_path: path,
@@ -83,7 +92,9 @@ const pollDirectoryForChanges = dirPath => {
   })
 }
 
+
 const pollerFunction = () => {
+  sendPing()
   pollDirectoryForChanges(".")
   firstPass = false
   setTimeout(pollerFunction, 1000)
