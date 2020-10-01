@@ -14,6 +14,8 @@ var firstPass = true
 const hostName = process.env.SERVER_URL || "train.skillerwhale.com"
 const serverPort = process.env.SERVER_PORT || "443"
 
+const changed_files = []
+
 function postRequestOptions(path, headers) {
   return {
     hostname: hostName,
@@ -34,6 +36,13 @@ function sendPing() {
 }
 
 function putUpdate(path) {
+  if(!changed_files.includes(path)) {
+    changed_files.push(path)
+  }
+}
+
+function uploadFile(path) {
+  process.stdout.write(`uploading: ${path}\n`)
   const data = JSON.stringify({
     relative_path: path,
     contents: fs.readFileSync(path).toString()
@@ -47,11 +56,20 @@ function putUpdate(path) {
   )
 
   const req = https.request(options, res => {
-    console.log(`status: ${res.statusCode}`)
+    process.stdout.write(`status: ${res.statusCode}\n`)
 
     res.on("data", d => {
       process.stdout.write(d)
+      process.stdout.write("\n")
     })
+
+    // 1xx and 2xx status codes are successful for our purposes
+    if(res.statusCode < 300) {
+      this_index = changed_files.indexOf(path)
+      if(this_index >= 0) {
+        changed_files.splice(this_index, 1)
+      }
+    }
   })
 
   req.on("error", error => {
@@ -59,6 +77,15 @@ function putUpdate(path) {
   })
   req.write(data)
   req.end()
+}
+
+function uploadChangedFiles() {
+  // Iterate over a copy so the indexes don't change as we modify the array
+  changed_files_copy = [...changed_files]
+
+  changed_files_copy.forEach(function(path) {
+    uploadFile(path)
+  })
 }
 
 function hashFile(path) {
@@ -93,10 +120,18 @@ const pollDirectoryForChanges = dirPath => {
 
 
 const pollerFunction = () => {
+  // Set the timeout first, to ensure an exception doesn't stop the recursion
+  setTimeout(pollerFunction, 1000)
   sendPing()
   pollDirectoryForChanges(".")
   firstPass = false
-  setTimeout(pollerFunction, 1000)
+}
+
+const uploaderFunction = () => {
+  // Set the timeout first, to ensure an exception doesn't stop the recursion
+  setTimeout(uploaderFunction, 1000)
+  uploadChangedFiles()
 }
 
 pollerFunction()
+uploaderFunction()
