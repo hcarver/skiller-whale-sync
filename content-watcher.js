@@ -30,7 +30,10 @@ function postRequestOptions(path, headers) {
 function sendPing() {
   const pingOptions = postRequestOptions("pings", {})
   const req = https.request(pingOptions)
-  req.on("error", console.error)
+  req.on("error", function (error) {
+    console.error(error)
+    req.destroy()
+  })
   req.end()
 }
 
@@ -65,7 +68,10 @@ function uploadFile(path) {
       }
     }
   })
-  req.on("error", console.error)
+  req.on("error", function (error) {
+    console.error(error)
+    req.destroy()
+  })
   req.write(data)
   req.end()
 }
