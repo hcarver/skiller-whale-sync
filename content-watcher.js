@@ -108,7 +108,7 @@ const pollDirectoryForChanges = dirPath => {
         if (!firstPass) {
           const oldHash = fileHashes.get(newPath)
           if (oldHash !== currentHash) {
-            console.log(`file changed ${newPath}`)
+            console.log(`file changed: ${newPath}`)
             putUpdate(newPath)
           }
         }
