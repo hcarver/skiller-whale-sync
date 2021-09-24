@@ -6,10 +6,10 @@ const crypto = require("crypto")
 const https = require("https")
 const process = require("process")
 
-let fileHashes = new Map()
+const fileHashes = new Map()
 const IGNORE_DIRS = ["node_modules", ".git"]
 const WATCHED_EXTS = [".jsx", ".js", ".html"]
-var firstPass = true
+let firstPass = true
 
 const hostName = process.env.SERVER_URL || "train.skillerwhale.com"
 const serverPort = process.env.SERVER_PORT || "443"
@@ -65,7 +65,7 @@ function uploadFile(path) {
 
     // 1xx and 2xx status codes are successful for our purposes
     if(res.statusCode < 300) {
-      this_index = changed_files.indexOf(path)
+      const this_index = changed_files.indexOf(path)
       if(this_index >= 0) {
         changed_files.splice(this_index, 1)
       }
@@ -81,7 +81,7 @@ function uploadFile(path) {
 
 function uploadChangedFiles() {
   // Iterate over a copy so the indexes don't change as we modify the array
-  changed_files_copy = [...changed_files]
+  const changed_files_copy = [...changed_files]
 
   changed_files_copy.forEach(function(path) {
     uploadFile(path)
