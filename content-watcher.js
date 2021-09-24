@@ -30,6 +30,7 @@ function postRequestOptions(path, headers) {
 function sendPing() {
   const pingOptions = postRequestOptions("pings", {})
   const req = https.request(pingOptions)
+  req.on("error", console.error)
   req.end()
 }
 
