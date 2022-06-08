@@ -8,7 +8,7 @@ const process = require("process")
 
 const fileHashes = new Map()
 const IGNORE_DIRS = ["node_modules", ".git"]
-const WATCHED_EXTS = [".jsx", ".js", ".html"]
+const WATCHED_EXTS = [".tsx", ".ts", ".jsx", ".js", ".html"]
 let firstPass = true
 
 const hostName = process.env.SERVER_URL || "train.skillerwhale.com"
