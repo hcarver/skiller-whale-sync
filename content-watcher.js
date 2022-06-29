@@ -49,9 +49,10 @@ function uploadFile(path) {
     relative_path: path,
     contents: fs.readFileSync(path).toString()
   })
+  const byteLength = new Blob([data]).size
   const headers = {
     "Content-Type": "application/json",
-    "Content-Length": data.length
+    "Content-Length": byteLength
   }
   const options = postRequestOptions("file_snapshots", headers)
   const req = https.request(options, function (res) {
