@@ -49,7 +49,7 @@ function uploadFile(path) {
     relative_path: path,
     contents: fs.readFileSync(path).toString()
   })
-  const byteLength = new Blob([data]).size
+  const byteLength = Buffer.byteLength(data)
   const headers = {
     "Content-Type": "application/json",
     "Content-Length": byteLength
